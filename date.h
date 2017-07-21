@@ -4,14 +4,15 @@
 
 class date_class
 {
-public:
-	date_class(int year, int month, int day);
-	tm* gtm();
+	public:
+		date_class();
+		date_class(int year, int month, int day);
+		tm* gtm();
 
-	int operator- (date_class d);
-	bool operator< (date_class d);
-	bool operator> (date_class d);
+		int operator- (date_class d);
+		bool operator< (date_class d);
+		bool operator> (date_class d);
 
-private:
-	tm t;
+	private:
+		tm t;
 };

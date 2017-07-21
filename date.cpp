@@ -2,6 +2,10 @@
 
 #define SEC_IN_DAY 86400
 
+date_class::date_class()
+{
+}
+
 date_class::date_class(int year, int month, int day)
 {
 	t.tm_sec = 0;
