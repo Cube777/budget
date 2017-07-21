@@ -1,7 +1,9 @@
 #include <iostream>
 #include "parser.h"
 
+#define CNL "> "
 #define NL "\n> "
+#define CLN "\33[2K\r"
 
 void stty(bool show = true, bool raw = false)
 {
@@ -15,9 +17,15 @@ void stty(bool show = true, bool raw = false)
 	system(s.c_str());
 }
 
-void run(std::string s)
+bool run(std::string s)
 {
+	if (s == "exit")
+		return false;
+}
 
+std::string complete(std::string s)
+{
+	return s;
 }
 
 void cli()
@@ -31,15 +39,28 @@ void cli()
 
 		if (c == '\r') {
 			stty();
-			run(line);
-			std::cout << NL;
+			bool res = run(line);
+			std::cout << "\n\r";
+			if (!res)
+				return;
+			std::cout << CNL;
 			stty(false, true);
 			line.clear();
 			continue;
 		}
 
-		if (c == '\t')
+		if (c == '\t') {
+			line = complete(line);
+			std::cout << CLN << CNL << line;
 			continue;
+		}
+
+		if (c == 127) {
+			if (!line.empty())
+				line.pop_back();
+			std::cout << CLN << CNL << line;
+			continue;
+		}
 
 		line += c;
 		std::cout << c;
