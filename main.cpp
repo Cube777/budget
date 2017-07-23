@@ -17,10 +17,26 @@ void stty(bool show = true, bool raw = false)
 	system(s.c_str());
 }
 
-bool run(std::string s)
+bool run(std::string s, parser &pr)
 {
+	std::string args;
+	size_t pos = s.find(' ');
+	if (pos != std::string::npos) {
+		s.substr(0, pos);
+		s.erase(pos);
+	}
+
 	if (s == "exit")
 		return false;
+
+	if (s == "add") {
+		pr.mgr.add(args);
+
+		return true;
+	}
+
+	std::cout << "Unknown command: \"" << s << "\"\n";
+	return true;
 }
 
 std::string complete(std::string s)
@@ -28,7 +44,7 @@ std::string complete(std::string s)
 	return s;
 }
 
-void cli()
+void cli(parser &pr)
 {
 	std::cout << NL;
 	stty(false, true);
@@ -39,7 +55,8 @@ void cli()
 
 		if (c == '\r') {
 			stty();
-			bool res = run(line);
+			std::cout << "\n\r";
+			bool res = run(line, pr);
 			std::cout << "\n\r";
 			if (!res)
 				return;
@@ -62,8 +79,8 @@ void cli()
 			continue;
 		}
 
-		line += c;
 		std::cout << c;
+		line += c;
 	}
 }
 
@@ -73,6 +90,6 @@ int main()
 	if (!pr.parse())
 		return EXIT_FAILURE;
 
-	cli();
+	cli(pr);
 	return 0;
 }

@@ -4,9 +4,11 @@
 
 date_class::date_class()
 {
+	time_t tt = time(NULL);
+	t = *localtime(&tt);
 }
 
-date_class::date_class(int year, int month, int day)
+date_class::date_class(int day, int month, int year)
 {
 	t.tm_sec = 0;
 	t.tm_min = 0;
@@ -19,6 +21,21 @@ date_class::date_class(int year, int month, int day)
 tm* date_class::gtm()
 {
 	return &t;
+}
+
+int date_class::day()
+{
+	return t.tm_mday;
+}
+
+int date_class::month()
+{
+	return t.tm_mon + 1;
+}
+
+int date_class::year()
+{
+	return t.tm_year + 1900;
 }
 
 int date_class::operator-(date_class d)

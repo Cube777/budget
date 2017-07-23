@@ -18,7 +18,7 @@ bool parser::parse()
 		date.erase(0, date.find('/') + 1);
 		int y = std::stoi(date);
 
-		mgr.add(name, date_class(y, m, d), cost);
+		mgr.add(name, date_class(d, m, y), cost);
 	}
 	return true;
 }
