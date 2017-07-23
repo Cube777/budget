@@ -11,6 +11,7 @@ class mgr_class
 		~mgr_class();
 		void add(std::string name, date_class dt, double c);
 		void add(std::string name);
+		void list(std::string name);
 
 	private:
 		std::map<std::string, std::vector<cost_class*>> csts;

@@ -38,6 +38,16 @@ int date_class::year()
 	return t.tm_year + 1900;
 }
 
+std::string date_class::tostr()
+{
+	std::string tmp;
+
+	tmp += dnum(day()) + "/";
+	tmp += dnum(month()) + "/";
+	tmp += std::to_string(year());
+	return tmp;
+}
+
 int date_class::operator-(date_class d)
 {
 	return int(difftime(mktime(&t), mktime(d.gtm())) / SEC_IN_DAY);
@@ -51,4 +61,12 @@ bool date_class::operator<(date_class d)
 bool date_class::operator>(date_class d)
 {
 	return (mktime(&t) > mktime(d.gtm()));
+}
+
+std::string date_class::dnum(int num)
+{
+	std::string tmp = std::to_string(num);
+	if (tmp.length() == 1)
+		tmp = "0" + tmp;
+	return tmp;
 }

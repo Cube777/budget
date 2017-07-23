@@ -1,6 +1,7 @@
 #pragma once
 
 #include "time.h"
+#include <string>
 
 class date_class
 {
@@ -13,10 +14,13 @@ class date_class
 		int month();
 		int year();
 
+		std::string tostr();
+
 		int operator- (date_class d);
 		bool operator< (date_class d);
 		bool operator> (date_class d);
 
 	private:
 		tm t;
+		static std::string dnum(int num);
 };

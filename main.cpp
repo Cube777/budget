@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip>
 #include "parser.h"
 
 #define CNL "> "
@@ -22,20 +23,22 @@ bool run(std::string s, parser &pr)
 	std::string args;
 	size_t pos = s.find(' ');
 	if (pos != std::string::npos) {
-		s.substr(0, pos);
+		args = s.substr(pos + 1);
 		s.erase(pos);
 	}
 
+	bool f = true;
 	if (s == "exit")
 		return false;
-
-	if (s == "add") {
+	else if (s == "add")
 		pr.mgr.add(args);
+	else if (s == "list")
+		pr.mgr.list(args);
+	else
+		f = false;
 
-		return true;
-	}
-
-	std::cout << "Unknown command: \"" << s << "\"\n";
+	if (!f)
+		std::cout << "Unknown command: \"" << s << "\"\n";
 	return true;
 }
 
@@ -86,6 +89,7 @@ void cli(parser &pr)
 
 int main()
 {
+	std::cout << std::fixed << std::setprecision(2);
 	parser pr;
 	if (!pr.parse())
 		return EXIT_FAILURE;
