@@ -36,6 +36,8 @@ bool run(std::string s, parser &pr)
 		pr.mgr.exc(args);
 	else if (s == "list")
 		pr.mgr.list(args);
+	else if (s == "income")
+		pr.mgr.set_income();
 	else
 		f = false;
 

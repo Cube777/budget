@@ -11,14 +11,16 @@ class mgr_class
 	public:
 		mgr_class();
 		~mgr_class();
-		void add(std::string name, date_class dt, double c,
-				cost_class::en_rec rec, bool ex);
+		void add(std::string name, date_class dt, double c, en_rec rec, bool ex);
 		void add(std::string name, date_class dt, double c);
 		void add(std::string name);
 		void exc(std::string name);
 		void list(std::string name, bool num = false);
 
 		void set_max_age(int age);
+		void set_income(double v);
+		void set_freq(en_rec e);
+		void set_income();
 
 		void exp_prop(std::ofstream &file);
 		void exp_data(std::ofstream &file);
@@ -31,4 +33,6 @@ class mgr_class
 		void clean();
 
 		int max_age;
+		en_rec freq;
+		double inc;
 };

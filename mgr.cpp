@@ -4,7 +4,9 @@
 #include <cmath>
 
 mgr_class::mgr_class() :
-	max_age(90)
+	max_age(90),
+	inc(0),
+	freq(wkly)
 {
 }
 
@@ -17,8 +19,8 @@ mgr_class::~mgr_class()
 			delete itr;
 }
 
-void mgr_class::add(std::string name, date_class dt, double c,
-		cost_class::en_rec rec, bool ex)
+void mgr_class::add(std::string name, date_class dt, double c, en_rec rec,
+		bool ex)
 {
 	cost_class* cl = new cost_class;
 	cl->date = dt;
@@ -47,7 +49,7 @@ void mgr_class::add(std::string name)
 
 	double c;
 	prompt("Cost:", c, 0.0);
-	add(name, dc, c, cost_class::nvr, false);
+	add(name, dc, c, nvr, false);
 }
 
 void mgr_class::exc(std::string name)
@@ -92,9 +94,9 @@ void mgr_class::list(std::string name, bool num)
 			std::cout << std::left << std::setw(n) << nm
 				<< std::right << std::setw(c) << itr->cost << std::left;
 			switch (itr->rec) {
-			case cost_class::nvr : std::cout << ' ' << itr->date.tostr(); break;
-			case cost_class::wkly : std::cout << " (Weekly)"; break;
-			case cost_class::mnly : std::cout << " (Monthly)"; break;
+			case nvr : std::cout << ' ' << itr->date.tostr(); break;
+			case wkly : std::cout << " (Weekly)"; break;
+			case mnly : std::cout << " (Monthly)"; break;
 			}
 			std::cout << '\n';
 		}
@@ -106,9 +108,43 @@ void mgr_class::set_max_age(int age)
 	max_age = age;
 }
 
+void mgr_class::set_income(double v)
+{
+	inc = v;
+}
+
+void mgr_class::set_freq(en_rec e)
+{
+	freq = e;
+}
+
+void mgr_class::set_income()
+{
+	std::cout << "1. Weekly\n2. Monthly\n\nPlease choose a frequency for "
+		<< "your income [1-2]: ";
+
+	int ans;
+	std::cin >> ans;
+	if ( (ans < 1) || (ans > 2 ) ) {
+		std::cout << "Invalid answer\n";
+		return;
+	}
+
+	switch (ans) {
+		case 1 : freq = wkly; break;
+		case 2 : freq = mnly; break;
+	}
+
+	std::cout << "Enter income amount: ";
+	std::cin >> inc;
+	std::cin.ignore();
+}
+
 void mgr_class::exp_prop(std::ofstream &file)
 {
 	file << "max_age=" << max_age << '\n';
+	file << "income_value=" << inc << '\n';
+	file << "income_freq=" << freq << '\n';
 }
 
 void mgr_class::exp_data(std::ofstream &file)

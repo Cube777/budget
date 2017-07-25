@@ -38,6 +38,10 @@ bool parser::parse()
 
 		if (line == "max_age")
 			mgr.set_max_age(std::stoi(val));
+		if (line == "income_value")
+			mgr.set_income(std::stod(val));
+		if (line == "income_freq")
+			mgr.set_freq(en_rec(std::stoi(val)));
 	}
 
 	std::string name, date;
@@ -45,7 +49,7 @@ bool parser::parse()
 	bool exc;
 	int rec;
 	while (f >> name >> cost >> date >> rec >> exc)
-		mgr.add(name, date_class(date), cost, cost_class::en_rec(rec), exc);
+		mgr.add(name, date_class(date), cost, en_rec(rec), exc);
 
 	return true;
 }
