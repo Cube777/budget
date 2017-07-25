@@ -3,11 +3,18 @@
 #include <iomanip>
 #include <cmath>
 
+mgr_class::mgr_class() :
+	max_age(90)
+{
+}
+
 mgr_class::~mgr_class()
 {
+	clean();
+
 	for (auto itr : csts)
-		for (auto i : itr.second)
-			delete i;
+		for (auto itr : itr.second)
+			delete itr;
 }
 
 void mgr_class::add(std::string name, date_class dt, double c,
@@ -94,6 +101,24 @@ void mgr_class::list(std::string name, bool num)
 	}
 }
 
+void mgr_class::set_max_age(int age)
+{
+	max_age = age;
+}
+
+void mgr_class::exp_prop(std::ofstream &file)
+{
+	file << "max_age=" << max_age << '\n';
+}
+
+void mgr_class::exp_data(std::ofstream &file)
+{
+	for (auto itr : csts)
+		for (auto cst : itr.second)
+			file << itr.first << ' ' << cst->cost << ' ' << cst->date.tostr()
+				<< ' ' << cst->rec << ' ' << cst->exc << '\n';
+}
+
 template <typename t1>
 void mgr_class::prompt(std::string pr, t1 &var, t1 def)
 {
@@ -107,5 +132,28 @@ void mgr_class::prompt(std::string pr, t1 &var, t1 def)
 			var = int(std::stoi(line));
 		else
 			var = double(std::stod(line));
+	}
+}
+
+void mgr_class::clean()
+{
+	date_class today;
+	bool rm;
+	for (auto itr : csts) {
+		size_t pos = 0;
+		for (auto cst : itr.second) {
+			rm = false;
+			if (today - cst->date > max_age)
+				rm = true;
+
+			// More tests
+
+			if (rm) {
+				auto i = itr.second.begin();
+				std::advance(i, pos);
+				itr.second.erase(i);
+			} else
+				pos++;
+		}
 	}
 }

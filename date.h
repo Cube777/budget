@@ -7,6 +7,7 @@ class date_class
 {
 	public:
 		date_class();
+		date_class(std::string d);
 		date_class(int day, int month, int year);
 		tm* gtm();
 

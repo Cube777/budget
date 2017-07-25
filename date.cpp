@@ -8,6 +8,15 @@ date_class::date_class()
 	t = *localtime(&tt);
 }
 
+date_class::date_class(std::string str)
+{
+	t.tm_mday = std::stoi(str.substr(0, str.find('/')));
+	str.erase(0, str.find('/') + 1);
+	t.tm_mon = std::stoi(str.substr(0, str.find('/'))) - 1;
+	str.erase(0, str.find('/') + 1);
+	t.tm_year = std::stoi(str) - 1900;
+}
+
 date_class::date_class(int day, int month, int year)
 {
 	t.tm_sec = 0;

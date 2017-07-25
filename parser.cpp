@@ -1,32 +1,56 @@
 #include "parser.h"
 #include <fstream>
 
+parser::~parser()
+{
+	std::ofstream file(get_fname());
+
+	if (!file.is_open());
+
+	// Export properties
+	mgr.exp_prop(file);
+
+	file << "START\n";
+
+	// Export data
+	mgr.exp_data(file);
+
+	file.close();
+}
+
 bool parser::parse()
 {
-	std::ifstream f(".budget");
+	std::ifstream f(get_fname());
 
 	if (!f.is_open())
 		return false;
 
-	std::string name, date, rec;
+	std::string line, val;
+
+	while (f >> line) {
+		if (line == "START")
+			break;
+		size_t pos = line.find('=');
+		if (pos == std::string::npos)
+			break;
+		val = line.substr(pos + 1);
+		line.erase(pos);
+
+		if (line == "max_age")
+			mgr.set_max_age(std::stoi(val));
+	}
+
+	std::string name, date;
 	double cost;
 	bool exc;
-	cost_class::en_rec rec_en;
-	while (f >> name >> cost >> date >> rec >> exc) {
-		int d = std::stoi(date.substr(0, date.find('/')));
-		date.erase(0, date.find('/') + 1);
-		int m = std::stoi(date.substr(0, date.find('/')));
-		date.erase(0, date.find('/') + 1);
-		int y = std::stoi(date);
+	int rec;
+	while (f >> name >> cost >> date >> rec >> exc)
+		mgr.add(name, date_class(date), cost, cost_class::en_rec(rec), exc);
 
-		if (rec == "nvr")
-			rec_en = cost_class::nvr;
-		else if (rec == "wkly")
-			rec_en = cost_class::wkly;
-		else if (rec == "mnthly")
-			rec_en = cost_class::mnly;
-
-		mgr.add(name, date_class(d, m, y), cost, rec_en, exc);
-	}
 	return true;
+}
+
+std::string parser::get_fname()
+{
+	return ".budget";
 }
