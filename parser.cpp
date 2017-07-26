@@ -22,8 +22,12 @@ bool parser::parse()
 {
 	std::ifstream f(get_fname());
 
-	if (!f.is_open())
-		return false;
+	if (!f.is_open()) {
+		crf();
+		f.open(get_fname());
+		if (!f.is_open())
+			return false;
+	}
 
 	std::string line, val;
 
@@ -56,5 +60,15 @@ bool parser::parse()
 
 std::string parser::get_fname()
 {
-	return ".budget";
+	if (!fname.empty())
+		return fname;
+	fname = getenv("HOME");
+	fname += "/.budget";
+	return fname;
+}
+
+void parser::crf()
+{
+	std::ofstream f(get_fname());
+	f.close();
 }

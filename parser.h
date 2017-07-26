@@ -11,5 +11,7 @@ class parser
 		mgr_class mgr;
 
 	private:
+		std::string fname;
 		std::string get_fname();
+		void crf();
 };
