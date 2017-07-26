@@ -191,7 +191,8 @@ void mgr_class::status()
 	cur += rec;
 	pln += rec;
 
-	int w = int(std::max(log10(abs(cur)), log10(abs(pln)))) + 5;
+	int w = int(std::max(log10(abs(cur)), log10(abs(pln))));
+	w = std::max(int(log10(abs(rec))), w) + 5;;
 	int b = int(std::max(log10(abs(inc - cur)), log10(abs(inc - pln)))) + 5;
 
 	std::cout << "Recurring cost:" << std::right << std::setw(w) << rec << '\n'
@@ -342,20 +343,23 @@ std::map<std::string, double> mgr_class::pln_costs()
 	std::map<std::string, double> ret;
 	date_class begin, end;
 	double total;
+	double tmp;
 	for (auto itr : csts) {
 		if (itr.second.size() < 2)
 			continue;
 
 		bool f = false;
 		total = 0;
+		tmp = 0;
 		for (auto itr : itr.second) {
+			total += tmp;
 			if (!f) {
 				begin = itr->date;
 				end = itr->date;
 				f = true;
 			}
 
-			total += itr->cost;
+			tmp = itr->cost;
 			if (itr->date < begin)
 				begin = itr->date;
 			if (itr->date > end)
