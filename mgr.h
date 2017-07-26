@@ -22,6 +22,8 @@ class mgr_class
 		void set_freq(en_rec e);
 		void set_income();
 
+		void status();
+
 		void exp_prop(std::ofstream &file);
 		void exp_data(std::ofstream &file);
 
@@ -31,6 +33,10 @@ class mgr_class
 		template <typename t1>
 		void prompt(std::string pr, t1 &var, t1 def);
 		void clean();
+
+		std::map<std::string, double> cur_costs();
+		std::map<std::string, double> pln_costs();
+		std::map<std::string, double> rec_costs();
 
 		int max_age;
 		en_rec freq;

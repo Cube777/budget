@@ -38,6 +38,8 @@ bool run(std::string s, parser &pr)
 		pr.mgr.list(args);
 	else if (s == "income")
 		pr.mgr.set_income();
+	else if (s == "status")
+		pr.mgr.status();
 	else
 		f = false;
 

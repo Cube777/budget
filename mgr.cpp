@@ -8,6 +8,7 @@ mgr_class::mgr_class() :
 	inc(0),
 	freq(wkly)
 {
+	clean();
 }
 
 mgr_class::~mgr_class()
@@ -140,6 +141,37 @@ void mgr_class::set_income()
 	std::cin.ignore();
 }
 
+void mgr_class::status()
+{
+	auto curs = cur_costs();
+	auto plns = pln_costs();
+	auto recs = rec_costs();
+
+	double cur = 0;
+	double pln = 0;
+	double rec = 0;
+
+	for (auto itr : curs)
+		cur += itr.second;
+	for (auto itr : plns)
+		pln += itr.second;
+	for (auto itr : recs)
+		rec += itr.second;
+
+	cur += rec;
+	pln += rec;
+
+	int w = int(std::max(log10(cur), log10(pln))) + 5;
+	int b = int(std::max(log10(inc - cur), log10(inc - pln))) + 5;
+
+	std::cout << "Recurring cost:" << std::right << std::setw(w) << rec << '\n'
+		<< "Current cost:  " << std::right << std::setw(w) << cur
+		<< std::left << "\tCurrent balance:" << std::right << std::setw(b)
+		<< inc - cur << '\n' << std::left << "Planned cost:  " << std::right
+		<< std::setw(w) << pln << std::left << "\tPlanned balance:"
+		<< std::right << std::setw(b) << inc - pln << '\n';
+}
+
 void mgr_class::exp_prop(std::ofstream &file)
 {
 	file << "max_age=" << max_age << '\n';
@@ -192,4 +224,102 @@ void mgr_class::clean()
 				pos++;
 		}
 	}
+}
+
+std::map<std::string, double> mgr_class::cur_costs()
+{
+	date_class begin, end;
+
+	if (freq == wkly) {
+		begin -= begin.wday() - 1;
+		end += 7 - end.wday();
+	} else if (freq == mnly) {
+		begin -= begin.day() - 1;
+		end += end.mdays() - end.day();
+	}
+
+	std::map<std::string, double> ret;
+
+	double total;
+	for (auto itr : csts) {
+		total = 0;
+		for (auto i : itr.second) {
+			if ((i->rec == nvr) && ((i->date >= begin) && (i->date <= end)))
+				total += i->cost;
+		} if (total != 0)
+			ret[itr.first] = total;
+	}
+	return ret;
+}
+
+std::map<std::string, double> mgr_class::pln_costs()
+{
+	int days = 0;
+	if (freq == wkly)
+		days = 7;
+	else if (freq == mnly)
+		days = date_class().mdays();
+
+	std::map<std::string, double> ret;
+	date_class begin, end;
+	double total;
+	for (auto itr : csts) {
+		if (itr.second.size() < 2)
+			continue;
+
+		bool f = false;
+		total = 0;
+		for (auto itr : itr.second) {
+			if (!f) {
+				begin = itr->date;
+				end = itr->date;
+				f = true;
+			}
+
+			total += itr->cost;
+			if (itr->date < begin)
+				begin = itr->date;
+			if (itr->date > end)
+				end = itr->date;
+		}
+		ret[itr.first] = total / ((end - begin) + 1) * days;
+	}
+
+	return ret;
+}
+
+std::map<std::string, double> mgr_class::rec_costs()
+{
+	int wim = 0;
+
+	date_class dt;
+	dt -= dt.day() - 1;
+	int mon = dt.month();
+	while (dt.month() == mon) {
+		if (dt.wday() == 0)
+			wim++;
+		dt += 1;
+	}
+
+	std::map<std::string, double> ret;
+	double total;
+
+	for (auto itr : csts) {
+		total = 0;
+		for (auto itr : itr.second) {
+			if (itr->rec == nvr)
+				continue;
+			if (itr->rec == freq)
+				total += itr->cost;
+			if ((itr->rec == wkly) && (freq == mnly))
+				total += itr->cost * wim;
+			if ((itr->rec == mnly) && (freq == wkly))
+				total += itr->cost / wim;
+		}
+
+		if (total != 0)
+			ret[itr.first] = total;
+	}
+
+	return ret;
 }
