@@ -115,7 +115,6 @@ date_class date_class::operator-(int days)
 	return operator+(days * -1);
 }
 
-
 void date_class::operator-=(int days)
 {
 	operator+=(days * -1);

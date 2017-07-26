@@ -32,6 +32,8 @@ bool run(std::string s, parser &pr)
 		return false;
 	else if (s == "add")
 		pr.mgr.add(args);
+	else if (s == "addrec")
+		pr.mgr.addrec(args);
 	else if (s == "exc")
 		pr.mgr.exc(args);
 	else if (s == "list")

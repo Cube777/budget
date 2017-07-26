@@ -14,6 +14,7 @@ class mgr_class
 		void add(std::string name, date_class dt, double c, en_rec rec, bool ex);
 		void add(std::string name, date_class dt, double c);
 		void add(std::string name);
+		void addrec(std::string name);
 		void exc(std::string name);
 		void list(std::string name, bool num = false);
 

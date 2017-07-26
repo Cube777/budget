@@ -53,6 +53,37 @@ void mgr_class::add(std::string name)
 	add(name, dc, c, nvr, false);
 }
 
+void mgr_class::addrec(std::string name)
+{
+	if (name.empty()) {
+		std::cout << "You must supply a name for the cost\n";
+		return;
+	}
+
+	std::cout << "1. Weekly\n2. Monthly\n\nPlease choose a frequency for "
+		<< "cost [1-2]: ";
+
+	int ans;
+	std::cin >> ans;
+	if ( (ans < 1) || (ans > 2 ) ) {
+		std::cout << "Invalid answer\n";
+		return;
+	}
+
+	en_rec rec;
+	switch (ans) {
+		case 1 : rec = wkly; break;
+		case 2 : rec = mnly; break;
+	}
+
+	double c;
+	std::cout << "Cost: ";
+	std::cin >> c;
+
+	add(name, date_class(), c, rec, false);
+	std::cin.ignore();
+}
+
 void mgr_class::exc(std::string name)
 {
 	if (name.empty()) {
@@ -138,7 +169,6 @@ void mgr_class::set_income()
 
 	std::cout << "Enter income amount: ";
 	std::cin >> inc;
-	std::cin.ignore();
 }
 
 void mgr_class::status()
@@ -161,8 +191,8 @@ void mgr_class::status()
 	cur += rec;
 	pln += rec;
 
-	int w = int(std::max(log10(cur), log10(pln))) + 5;
-	int b = int(std::max(log10(inc - cur), log10(inc - pln))) + 5;
+	int w = int(std::max(log10(abs(cur)), log10(abs(pln)))) + 5;
+	int b = int(std::max(log10(abs(inc - cur)), log10(abs(inc - pln)))) + 5;
 
 	std::cout << "Recurring cost:" << std::right << std::setw(w) << rec << '\n'
 		<< "Current cost:  " << std::right << std::setw(w) << cur
