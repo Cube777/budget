@@ -202,6 +202,55 @@ void mgr_class::status()
 		<< std::right << std::setw(b) << inc - pln << '\n';
 }
 
+void mgr_class::rank()
+{
+	auto pln = pln_costs();
+
+	int w = 0;
+	int c = 0;
+
+	for (auto itr : pln) {
+		w = std::max(int(itr.first.length()), w);
+		c = std::max(int(log10(abs(itr.second))), c);
+	}
+
+	w++;
+	c += 4;
+
+	std::vector<std::string> names;
+	std::vector<double> vals;
+	for (auto itr : pln) {
+		names.push_back(itr.first);
+		vals.push_back(itr.second);
+	}
+
+	for (size_t i = 0; i < vals.size(); i++) {
+		bool swap = false;
+		for (size_t k = 1; k < vals.size(); k++) {
+			if (vals[k-1] < vals[k]) {
+				double tv = vals[k];
+				vals[k] = vals[k-1];
+				vals[k-1] = tv;
+
+				std::string ts = names[k];
+				names[k] = names[k-1];
+				names[k-1] = ts;
+
+				swap = true;
+			}
+		}
+		if (!swap)
+			break;
+	}
+
+	int n = log10(abs(names.size() + 1)) + 1;
+	for (size_t i = 0; i < names.size(); i++) {
+		std::cout << std::right << std::setw(n) << i + 1 << ". "
+			<< std::left << std::setw(w) << names[i] << ' '
+			<< std::right << std::setw(c) << vals[i] << '\n';
+	}
+}
+
 void mgr_class::exp_prop(std::ofstream &file)
 {
 	file << "max_age=" << max_age << '\n';

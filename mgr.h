@@ -24,6 +24,7 @@ class mgr_class
 		void set_income();
 
 		void status();
+		void rank();
 
 		void exp_prop(std::ofstream &file);
 		void exp_data(std::ofstream &file);
