@@ -1,5 +1,6 @@
 #include <iostream>
 #include <iomanip>
+#include <regex>
 #include "parser.h"
 
 #define CNL "> "
@@ -52,9 +53,67 @@ bool run(std::string s, parser &pr)
 	return true;
 }
 
-std::string complete(std::string s)
+std::string complete(std::string s, parser &pr)
 {
-	return s;
+	std::string com, arg;
+	size_t pos = s.find(' ');
+	com = s.substr(0, pos);
+	arg = s.substr(pos + 1);
+
+	bool f = (com == s);
+	std::vector<std::string> comps;
+
+	if (f) {
+		arg.clear();
+
+		comps.push_back("exit");
+		comps.push_back("add");
+		comps.push_back("addrec");
+		comps.push_back("exc");
+		comps.push_back("list");
+		comps.push_back("rank");
+		comps.push_back("income");
+		comps.push_back("status");
+	} else
+		comps = pr.mgr.get_names();
+
+	std::regex rgx("(" + (f ? com : arg) + ")"+ "(.*)");
+
+	std::vector<std::string> m;
+	for (auto itr : comps)
+		if (std::regex_match(itr, rgx))
+			m.push_back(itr);
+
+	if (m.empty())
+		return s;
+	if (m.size() == 1)
+		return (f ? m[0] : com + " " + m[0]);
+
+	for (auto itr : m)
+		std::cout << "\n\r" << itr;
+	std::cout << "\n\r";
+
+	std::string tmp;
+
+	pos = 0;
+	while (true) {
+		if (pos >= m[0].size())
+			break;
+		char c = m[0][pos];
+		bool f = true;
+		for (auto itr : m)
+			if ((pos >= itr.size()) || (itr[pos] != c)) {
+				f = false;
+				break;
+			}
+
+		if (!f)
+			break;
+		tmp += c;
+		pos++;
+	}
+
+	return (f ? tmp : com + " " + tmp);
 }
 
 void cli(parser &pr)
@@ -80,7 +139,7 @@ void cli(parser &pr)
 		}
 
 		if (c == '\t') {
-			line = complete(line);
+			line = complete(line, pr);
 			std::cout << CLN << CNL << line;
 			continue;
 		}

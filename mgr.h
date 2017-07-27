@@ -26,6 +26,8 @@ class mgr_class
 		void status();
 		void rank();
 
+		std::vector<std::string> get_names();
+
 		void exp_prop(std::ofstream &file);
 		void exp_data(std::ofstream &file);
 

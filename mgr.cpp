@@ -252,6 +252,15 @@ void mgr_class::rank()
 	}
 }
 
+std::vector<std::string> mgr_class::get_names()
+{
+	std::vector<std::string> ret;
+	for (auto itr : csts)
+		ret.push_back(itr.first);
+
+	return ret;
+}
+
 void mgr_class::exp_prop(std::ofstream &file)
 {
 	file << "max_age=" << max_age << '\n';
