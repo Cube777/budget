@@ -90,7 +90,22 @@ void mgr_class::exc(std::string name)
 		std::cout << "You must supply a name for exclusion\n";
 		return;
 	}
+	if (csts.find(name) == csts.end())
+		return;
 	list(name, true);
+
+
+	std::cout << "Choose a number [1-" << csts[name].size() << "]: ";
+	int num;
+	std::cin >> num;
+
+	if ((num < 1) || (num > csts[name].size())) {
+		std::cout << "Invalid option\n";
+		return;
+	}
+
+	csts[name][num - 1]->exc = true;
+	std::cin.ignore();
 }
 
 void mgr_class::list(std::string name, bool num)
@@ -361,6 +376,8 @@ std::map<std::string, double> mgr_class::pln_costs()
 		total = 0;
 		tmp = 0;
 		for (auto itr : itr.second) {
+			if (itr->exc)
+				continue;
 			total += tmp;
 			if (!f) {
 				begin = itr->date;
