@@ -122,10 +122,49 @@ void cli(parser &pr)
 	stty(false, true);
 	std::string line;
 	char c;
+	std::vector<std::string> hist;
+	hist.push_back("");
+	int hpos = 0;
+	bool esc = false;
+	bool arw = false;
 	while (true) {
 		std::cin.get(c);
 
+		if (c == 27) {
+			esc = true;
+			continue;
+		}
+
+		if (esc && !arw) {
+			if (c == 91) {
+				arw = true;
+				continue;
+			}
+			esc = false;
+			arw = false;
+			std::cin.ignore();
+			continue;
+		}
+
+		if (esc && arw) {
+			if (c == 66) {
+				hpos = std::max(0, hpos - 1);
+				line = hist[hpos];
+			} else {
+				hpos = std::min(int(hist.size()) - 1, hpos + 1);
+				line = hist[hpos];
+			}
+
+			esc = false;
+			arw = false;
+			std::cout << CLN << CNL << line;
+			continue;
+		}
+
 		if (c == '\r') {
+			hist[0] = line;
+			hist.insert(hist.begin(), "");
+			hpos = 0;
 			stty();
 			std::cout << "\n\r";
 			bool res = run(line, pr);
