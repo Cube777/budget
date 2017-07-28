@@ -150,6 +150,35 @@ void mgr_class::list(std::string name, bool num)
 	}
 }
 
+void mgr_class::cur()
+{
+	auto cst = cur_costs();
+	int n = 0, c = 0;
+	double total = 0;
+
+	for (auto itr : cst) {
+		n = std::max(n, int(itr.first.size()));
+		c = std::max(c, int(log10(abs(itr.second))));
+		total += itr.second;
+	}
+
+	n = std::max(n, int(std::string("Total: ").size()));
+	c = std::max(c, int(log10(abs(total))));
+
+	c += 5;
+
+	for (auto itr : cst) {
+		std::cout << std::left << std::setw(n) << itr.first
+			<< std::right << std::setw(c) << itr.second;
+		if (total != 0)
+			std::cout << ' ' << std::setw(7) << itr.second / total * 100 << "%";
+		std::cout << '\n';
+	}
+
+	std::cout << '\n' << std::left << std::setw(n) << "Total: "
+		<< std::right << std::setw(c) << total << '\n';
+}
+
 void mgr_class::set_max_age(int age)
 {
 	max_age = age;
