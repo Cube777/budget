@@ -218,7 +218,7 @@ void mgr_class::set_income()
 void mgr_class::status()
 {
 	auto curs = cur_costs();
-	auto plns = pln_costs();
+	auto plns = pln_costs(curs);
 	auto recs = rec_costs();
 
 	double cur = 0;
@@ -359,7 +359,7 @@ void mgr_class::clean()
 	}
 }
 
-std::map<std::string, double> mgr_class::cur_costs()
+cost_map mgr_class::cur_costs()
 {
 	date_class begin, end;
 
@@ -371,7 +371,7 @@ std::map<std::string, double> mgr_class::cur_costs()
 		end += end.mdays() - end.day();
 	}
 
-	std::map<std::string, double> ret;
+	cost_map ret;
 
 	double total;
 	for (auto itr : csts) {
@@ -385,7 +385,13 @@ std::map<std::string, double> mgr_class::cur_costs()
 	return ret;
 }
 
-std::map<std::string, double> mgr_class::pln_costs()
+cost_map mgr_class::pln_costs()
+{
+	cost_map tmp;
+	return pln_costs(tmp);
+}
+
+cost_map mgr_class::pln_costs(cost_map &cc)
 {
 	int days = 0;
 	if (freq == wkly)
@@ -393,13 +399,17 @@ std::map<std::string, double> mgr_class::pln_costs()
 	else if (freq == mnly)
 		days = date_class().mdays();
 
-	std::map<std::string, double> ret;
+	cost_map ret;
 	date_class begin, end;
 	double total;
 	double tmp;
 	for (auto itr : csts) {
-		if (itr.second.size() < 2)
+		if (itr.second.size() < 2) {
+			if (cc.find(itr.first) != cc.end()) {
+				ret[itr.first] = cc[itr.first];
+			}
 			continue;
+		}
 
 		bool f = false;
 		total = 0;
@@ -420,13 +430,13 @@ std::map<std::string, double> mgr_class::pln_costs()
 			if (itr->date > end)
 				end = itr->date;
 		}
-		ret[itr.first] = total / ((end - begin) + 1) * days;
+		ret[itr.first] = total / (end - begin) * days;
 	}
 
 	return ret;
 }
 
-std::map<std::string, double> mgr_class::rec_costs()
+cost_map mgr_class::rec_costs()
 {
 	int wim = 0;
 
@@ -439,7 +449,7 @@ std::map<std::string, double> mgr_class::rec_costs()
 		dt += 1;
 	}
 
-	std::map<std::string, double> ret;
+	cost_map ret;
 	double total;
 
 	for (auto itr : csts) {

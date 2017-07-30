@@ -6,6 +6,8 @@
 #include <vector>
 #include <fstream>
 
+typedef std::map<std::string, double> cost_map;
+
 class mgr_class
 {
 	public:
@@ -39,9 +41,10 @@ class mgr_class
 		void prompt(std::string pr, t1 &var, t1 def);
 		void clean();
 
-		std::map<std::string, double> cur_costs();
-		std::map<std::string, double> pln_costs();
-		std::map<std::string, double> rec_costs();
+		cost_map cur_costs();
+		cost_map pln_costs();
+		cost_map pln_costs(cost_map &cc);
+		cost_map rec_costs();
 
 		int max_age;
 		en_rec freq;
