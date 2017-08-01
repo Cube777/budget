@@ -441,7 +441,9 @@ cost_map mgr_class::rec_costs()
 	int wim = 0;
 
 	date_class dt;
+	dt += (dt.wday() == 0 ? 0 : 7 - dt.wday());
 	dt -= dt.day() - 1;
+
 	int mon = dt.month();
 	while (dt.month() == mon) {
 		if (dt.wday() == 0)
@@ -449,6 +451,7 @@ cost_map mgr_class::rec_costs()
 		dt += 1;
 	}
 
+	std::cout << "Weeks in month: " << wim << "\n\n";
 	cost_map ret;
 	double total;
 
