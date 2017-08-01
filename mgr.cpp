@@ -364,8 +364,8 @@ cost_map mgr_class::cur_costs()
 	date_class begin, end;
 
 	if (freq == wkly) {
-		begin -= begin.wday() - 1;
-		end += 7 - end.wday();
+		begin -= (begin.wday() == 0 ? 6 : begin.wday() - 1);
+		end = begin + 6;
 	} else if (freq == mnly) {
 		begin -= begin.day() - 1;
 		end += end.mdays() - end.day();
