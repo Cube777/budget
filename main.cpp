@@ -41,6 +41,8 @@ bool run(std::string s, parser &pr)
 		pr.mgr.list(args);
 	else if (s == "cur")
 		pr.mgr.cur();
+	else if (s == "currec")
+		pr.mgr.cur(true);
 	else if (s == "rank")
 		pr.mgr.rank();
 	else if (s == "income")
@@ -74,6 +76,7 @@ std::string complete(std::string s, parser &pr)
 		comps.push_back("exc");
 		comps.push_back("list");
 		comps.push_back("cur");
+		comps.push_back("currec");
 		comps.push_back("rank");
 		comps.push_back("income");
 		comps.push_back("status");

@@ -19,7 +19,7 @@ class mgr_class
 		void addrec(std::string name);
 		void exc(std::string name);
 		void list(std::string name, bool num = false);
-		void cur();
+		void cur(bool rec = false);
 
 		void set_max_age(int age);
 		void set_income(double v);

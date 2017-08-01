@@ -150,9 +150,9 @@ void mgr_class::list(std::string name, bool num)
 	}
 }
 
-void mgr_class::cur()
+void mgr_class::cur(bool rec)
 {
-	auto cst = cur_costs();
+	auto cst = (rec ? rec_costs() : cur_costs());
 	int n = 0, c = 0;
 	double total = 0;
 
