@@ -403,8 +403,17 @@ cost_map mgr_class::pln_costs(cost_map &cc)
 	date_class begin, end;
 	double total;
 	double tmp;
+	int cnt;
 	for (auto itr : csts) {
-		if (itr.second.size() < 2) {
+		cnt = 0;
+		for (auto i : itr.second) {
+			if (!i->exc)
+				cnt++;
+			if (cnt >= 2)
+				break;
+		}
+
+		if (cnt < 2) {
 			if (cc.find(itr.first) != cc.end()) {
 				ret[itr.first] = cc[itr.first];
 			}
