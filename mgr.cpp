@@ -5,8 +5,8 @@
 
 mgr_class::mgr_class() :
 	max_age(90),
-	inc(0),
-	freq(wkly)
+	freq(wkly),
+	inc(0)
 {
 	clean();
 }
@@ -99,7 +99,7 @@ void mgr_class::exc(std::string name)
 	int num;
 	std::cin >> num;
 
-	if ((num < 1) || (num > csts[name].size())) {
+	if ((num < 1) || (num > (int)csts[name].size())) {
 		std::cout << "Invalid option\n";
 		return;
 	}
