@@ -1,6 +1,6 @@
 #pragma once
 
-#include <ctime>
+#include <time.h>
 #include <string>
 
 class date_class
@@ -20,6 +20,7 @@ class date_class
 		int mdays();
 
 		std::string tostr();
+		void set_str(std::string str);
 
 		date_class operator+(int days);
 		void operator+=(int days);
@@ -31,6 +32,8 @@ class date_class
 		bool operator<= (date_class d);
 		bool operator> (date_class d);
 		bool operator>= (date_class d);
+
+		static std::string def_date;
 
 	private:
 		tm t;

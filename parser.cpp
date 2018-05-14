@@ -5,8 +5,6 @@ parser::~parser()
 {
 	std::ofstream file(get_fname());
 
-	if (!file.is_open());
-
 	// Export properties
 	mgr.exp_prop(file);
 

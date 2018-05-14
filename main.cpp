@@ -49,6 +49,8 @@ bool run(std::string s, parser &pr)
 		pr.mgr.set_income();
 	else if (s == "status")
 		pr.mgr.status();
+	else if (s == "date")
+		date_class::def_date = args;
 	else
 		f = false;
 
@@ -80,6 +82,7 @@ std::string complete(std::string s, parser &pr)
 		comps.push_back("rank");
 		comps.push_back("income");
 		comps.push_back("status");
+		comps.push_back("date");
 	} else
 		comps = pr.mgr.get_names();
 

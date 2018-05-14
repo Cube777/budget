@@ -158,12 +158,12 @@ void mgr_class::cur(bool rec)
 
 	for (auto itr : cst) {
 		n = std::max(n, int(itr.first.size()));
-		c = std::max(c, int(log10(abs(itr.second))));
+		c = std::max(c, int(log10(std::abs(itr.second))));
 		total += itr.second;
 	}
 
 	n = std::max(n, int(std::string("Total: ").size()));
-	c = std::max(c, int(log10(abs(total))));
+	c = std::max(c, int(log10(std::abs(total))));
 
 	c += 5;
 
@@ -235,9 +235,9 @@ void mgr_class::status()
 	cur += rec;
 	pln += rec;
 
-	int w = int(std::max(log10(abs(cur)), log10(abs(pln))));
-	w = std::max(int(log10(abs(rec))), w) + 5;;
-	int b = int(std::max(log10(abs(inc - cur)), log10(abs(inc - pln)))) + 5;
+	int w = int(std::max(log10(std::abs(cur)), log10(std::abs(pln))));
+	w = std::max(int(log10(std::abs(rec))), w) + 5;;
+	int b = int(std::max(log10(std::abs(inc - cur)), log10(std::abs(inc - pln)))) + 5;
 
 	std::cout << "Recurring cost:" << std::right << std::setw(w) << rec << '\n'
 		<< "Current cost:  " << std::right << std::setw(w) << cur
@@ -256,7 +256,7 @@ void mgr_class::rank()
 
 	for (auto itr : pln) {
 		w = std::max(int(itr.first.length()), w);
-		c = std::max(int(log10(abs(itr.second))), c);
+		c = std::max(int(log10(std::abs(itr.second))), c);
 	}
 
 	w++;
@@ -288,7 +288,7 @@ void mgr_class::rank()
 			break;
 	}
 
-	int n = log10(abs(names.size() + 1)) + 1;
+	int n = log10(std::abs((int)names.size() + 1)) + 1;
 	for (size_t i = 0; i < names.size(); i++) {
 		std::cout << std::right << std::setw(n) << i + 1 << ". "
 			<< std::left << std::setw(w) << names[i] << ' '

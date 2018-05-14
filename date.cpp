@@ -2,8 +2,15 @@
 
 #define SEC_IN_DAY 86400
 
+std::string date_class::def_date;
+
 date_class::date_class()
 {
+	if (!def_date.empty()) {
+		set_str(def_date);
+		return;
+	}
+
 	time_t tt = time(NULL);
 	t = *localtime(&tt);
 
@@ -19,18 +26,7 @@ date_class::date_class(tm time) :
 
 date_class::date_class(std::string str)
 {
-	t.tm_mday = std::stoi(str.substr(0, str.find('/')));
-	str.erase(0, str.find('/') + 1);
-	t.tm_mon = std::stoi(str.substr(0, str.find('/'))) - 1;
-	str.erase(0, str.find('/') + 1);
-	t.tm_year = std::stoi(str) - 1900;
-
-	t.tm_sec = 0;
-	t.tm_min = 0;
-	t.tm_hour = 0;
-
-	time_t tt = mktime(&t);
-	t = *localtime(&tt);
+	set_str(str);
 }
 
 date_class::date_class(int day, int month, int year)
@@ -94,6 +90,22 @@ std::string date_class::tostr()
 	tmp += dnum(month()) + "/";
 	tmp += std::to_string(year());
 	return tmp;
+}
+
+void date_class::set_str(std::string str)
+{
+	t.tm_mday = std::stoi(str.substr(0, str.find('/')));
+	str.erase(0, str.find('/') + 1);
+	t.tm_mon = std::stoi(str.substr(0, str.find('/'))) - 1;
+	str.erase(0, str.find('/') + 1);
+	t.tm_year = std::stoi(str) - 1900;
+
+	t.tm_sec = 0;
+	t.tm_min = 0;
+	t.tm_hour = 0;
+
+	time_t tt = mktime(&t);
+	t = *localtime(&tt);
 }
 
 date_class date_class::operator+(int days)
